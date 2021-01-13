@@ -1,0 +1,695 @@
+//Admin's Main Page
+void admin()
+{
+              FILE *in;
+        int mv;
+    FILE *fp;
+    fp=fopen("credit.dat","r");
+        int k,v=0;
+    printf("\n\n\t\t\tWELCOME ADMIN\t");
+    printf("\n\t\t1.Display Users\n\t\t2.Search\n\t\t3.Remove User\n\t\t4.Cancellation Requests\n\t\t5.Change Eligibility Amount\n\t\t6.Exit\t");
+    scanf("%d",&k);
+    switch(k)
+    {
+    case 1:
+       {
+           //Admin Signup
+        while(fscanf(fp,"%d %s %s %ld %ld %d\n",&s2.userid,s2.password,s2.name,&s2.acno,&s2.income,&s2.pincode)!=EOF)
+        {
+            printf("\n\t\tUser ID: %d",s2.userid);
+            printf("\n\t\tName: %s",s2.name);
+            printf("\n\t\tAccount no: %d",s2.acno);
+            printf("\n\t\tAnnual Income: %d",s2.income);
+            printf("\n\t\tPincode: %d\n",s2.pincode);
+        }
+        admin();
+        break;
+    }
+    case 2:
+        {
+            //Search User by User ID
+            int n,temper=0;
+            printf("\n\t\tEnter the User ID to search");
+            scanf("%d",&n);
+            while(fscanf(fp,"%d %s %s %ld %ld %d\n",&s2.userid,s2.password,s2.name,&s2.acno,&s2.income,&s2.pincode)!=EOF)
+            {
+                if(s2.userid==n)
+                {
+            printf("\n\t\tUser ID: %d",s2.userid);
+            printf("\n\t\tName: %s",s2.name);
+            printf("\n\t\tAccount no: %d",s2.acno);
+            printf("\n\t\tAnnual Income: %d",s2.income);
+            printf("\n\t\tPincode: %d\n",s2.pincode);
+            temper=1;
+                }
+            }
+            if(temper==0)
+            {
+                printf("\n\t\tNo Results Found :(");
+            }
+            admin();
+            break;
+
+        }
+    case 3:
+        {
+            //Remove User by User ID
+            FILE *fp,*fp2;
+            printf("\tEnter UserID to Remove:\t");
+            int del,temp=1,flag=1,count=1;
+            scanf("%d",&del);
+            char c,ch;
+            fp=fopen("credit.dat","r");
+            while(fscanf(fp,"%d %s %s %ld %ld %d\n",&s2.userid,s2.password,s2.name,&s2.acno,&s2.income,&s2.pincode)!=EOF)
+            {
+                 flag++;
+                if(s2.userid==del)
+                {
+                    v=1;
+                    break;
+                }
+
+            }
+                fclose(fp);
+
+            fp=fopen("credit.dat","r");
+            fp2=fopen("copy.dat","w");
+            while(c!=EOF)
+            {
+                   c=fgetc(fp);
+                    fputc(c,fp2);
+            }
+            fclose(fp2);
+            fclose(fp);
+            fp=fopen("credit.dat","w");
+            fp2=fopen("copy.dat","r");
+            while(ch!=EOF)
+            {
+                ch=fgetc(fp2);
+
+                if(ch=='\n')
+                 {
+                 temp++;
+                }
+
+        if(temp!=flag-1)
+                {
+                            fputc(ch,fp);
+
+                }
+
+            }
+            fclose(fp);
+            fclose(fp2);
+            if(v==1)
+            printf("\n\t\tREMOVED SUCCESSFULLY!\t");
+            else
+                printf("\n\tUser ID not found!!\t");
+            admin();
+            break;
+    }
+    case 4:
+        {
+            //Cancellation Requests
+            FILE *msg;
+            msg=fopen("cancelrequest.dat","r");
+            char ch;
+            printf("\n");
+            while(ch!=EOF)
+            {
+                ch=fgetc(msg);
+                printf("%c",ch);
+            }
+            fclose(msg);
+            admin();
+            break;
+        }
+    case 5:
+        {
+
+            printf("\n\t\tEnter the Eligibility Amount:\t");
+            scanf("%d",&mv);
+            in=fopen("inc.dat","w");
+            fprintf(in,"%d",mv);
+            fclose(in);
+            break;
+
+        }
+    case 6:
+        {
+            //Exit
+            exit(0);
+            break;
+        }
+    default:
+        {
+            printf("\n\t\tEnter between 1 and 5");
+            admin();
+        }
+
+    }
+}
+
+
+
+
+//Admin Signup Page
+void adminsignup()
+{
+    printf("\n\t\t\tWELCOME TO ADMIN SIGNUP\t");
+     int flag=0,m,index=0;
+     char pass[20],c;
+     FILE *fa;
+    printf("\n\t\tUserID:\t");
+    scanf("%d",&a1.adminid);
+            fa=fopen("admin.dat","r");
+while(fscanf(fa,"%d %s\n",&a2.adminid,a2.pass)!=EOF)
+   {
+       if(a1.adminid==a2.adminid)
+       {
+        flag=1;
+         printf("\n\t\tEnter another Admin ID\n");
+           adminsignup();
+        }
+       }
+
+
+
+    if(flag==0)
+   {
+
+        fa=fopen("admin.dat","a+");
+        fprintf(fa,"%d\t",a1.adminid);
+    printf("\t\tPassword:\t");
+        //scanf("%s",a1.pass);
+                    while((c = getch()) != 13){
+       if(index < 0)
+           index = 0;
+
+       if(c == 8){
+           putch('\b');
+           putch(NULL);
+           putch('\b');
+           index--;
+       continue;
+       }
+       pass[index++] = c;
+       putch('*');
+   }
+   pass[index] = '\0';
+   strcpy(a1.pass,pass);
+            fprintf(fa,"%s\n",a1.pass);
+printf("\n\t\tEnter 1.login \t2.Exit\t");
+scanf("%d",&m);
+fclose(fa);
+    switch(m)
+    {   case 1:
+            adminlogin();
+            break;
+        case 2:
+            exit(0);
+            break;
+        default:
+            {
+                printf("\n\t\tEnter 1 or 3");
+                main();
+                break;
+            }
+   }
+
+}
+}
+
+//Changing New Passkey.
+void key()
+{
+int index=0;
+char c,kiy[10];
+printf("\n\t\tEnter New Key:\t");
+               while((c = getch()) != 13){
+       if(index < 0)
+           index = 0;
+
+       if(c == 8){
+           putch('\b');
+           putch(NULL);
+           putch('\b');
+           index--;
+       continue;
+       }
+       kiy[index++] = c;
+       putch('*');
+   }
+   kiy[index] = '\0';
+
+FILE *ky;
+ky=fopen("key.dat","w");
+fprintf(ky,"%s\n",kiy);
+printf("\n\tYour new passkey is: %s\t",kiy);
+fclose(ky);
+}
+
+
+//Checking Key for Admin Login.
+void keymatch()
+{
+    int index=0;
+    char c,kc[10],lc[10];
+    printf("\n\t\tEnter the old key:\t");
+    //scanf("%d",&lc);
+    while((c = getch()) != 13){
+       if(index < 0)
+           index = 0;
+
+       if(c == 8){
+           putch('\b');
+           putch(NULL);
+           putch('\b');
+           index--;
+       continue;
+       }
+       lc[index++] = c;
+       putch('*');
+   }
+   lc[index] = '\0';
+    FILE *ky;
+    ky=fopen("key.dat","r");
+       while(fscanf(ky,"%s",&kc)!=EOF)
+       {
+           if(strcmp(kc,lc)==0)
+           {
+               key();
+           }
+           else
+            {
+            printf("\n\t\tENTER CORRECT KEY!\t");
+           }
+       }
+       fclose(ky);
+}
+
+
+//Admin Login Page
+void adminlogin()
+{
+    int aun,count=0,index=0;
+    char apw[30],c;
+   printf("\n\t\t\tWELCOME TO ADMIN LOGIN\t");
+   printf("\n\t\tEnter Admin Username:\t");
+   scanf("%d",&aun);
+   printf("\n\t\tEnter Admin Password:\t");
+  // scanf("%s",apw);
+                 while((c = getch()) != 13){
+       if(index < 0)
+           index = 0;
+
+       if(c == 8){
+           putch('\b');
+           putch(NULL);
+           putch('\b');
+           index--;
+       continue;
+       }
+       apw[index++] = c;
+       putch('*');
+   }
+   apw[index] = '\0';
+
+
+    FILE *fa;
+
+        fa=fopen("admin.dat","r");
+       while(fscanf(fa,"%d %s\n",&a2.adminid,a2.pass)!=EOF)
+        {
+        if(a2.adminid==aun)
+        {
+            if(strcmp(a2.pass,apw)==0)
+            {
+
+            count=1;
+            break;
+        }}
+        }
+        if(count==1)
+        {
+                        printf("\n\t\t\tLOGIN SUCCESSFUL!\t\t");
+                        admin();
+
+        }
+        if(count==0)
+        {
+            printf("\n\t\t\tINVALID USERNAME OR PASSWORD!\t");
+            adminlogin();
+        }
+    fclose(fa);
+}
+
+//User Signup Page.
+void signup()
+{
+    int flag=0,m,game=0,index=0,acno[20],w;
+    char password[20],c;
+     FILE *fp;
+     FILE *in;
+    in=fopen("inc.dat","r");
+    fscanf(in,"%d\n",&w);
+    fclose(in);
+    printf("\t\t\tSIGN UP\n");
+    printf("\n\tEnter details without any space\t");
+    printf("\n\t\tUserID: \t");
+    scanf("%d",&s1.userid);
+            fp=fopen("credit.dat","r");
+while(fscanf(fp,"%d %s %s %ld %ld %d\n",&s2.userid,s2.password,s2.name,&s2.acno,&s2.income,&s2.pincode)!=EOF)
+   {
+       if(s1.userid==s2.userid)
+       {
+        flag=1;
+         printf("\t\tEnter another user name\n");
+           signup();
+           fclose(fp);
+        }
+    }
+        printf("\n\t\tIncome:\t");
+        scanf("%ld",&s1.income);
+        if(s1.income<w)
+        {
+            printf("\n\t\tNot eligible for credit card service\t");
+            game=1;
+            signup();
+        }
+
+
+    if(flag==0&&game==0)
+   {
+
+        fp=fopen("credit.dat","a");
+        fprintf(fp,"%d\t",s1.userid);
+    printf("\t\tPassword:\t");
+        //scanf("%s",s1.password);
+        while((c = getch()) != 13){
+       if(index < 0)
+           index = 0;
+
+       if(c == 8){
+           putch('\b');
+           putch(NULL);
+           putch('\b');
+           index--;
+       continue;
+       }
+       password[index++] = c;
+       putch('*');
+   }
+   password[index] = '\0';
+   strcpy(s1.password,password);
+            fprintf(fp,"%s\t",s1.password);
+
+        printf("\n\t\tName:\t");
+        scanf("%s",s1.name);
+            fprintf(fp,"%s\t",s1.name);
+
+        printf("\n\t\tBank Acno:\t");
+       // scanf("%ld",&s1.acno);
+       while((c = getch()) != 13){
+       if(index < 0)
+           index = 0;
+
+       if(c == 8){
+           putch('\b');
+           putch(NULL);
+           putch('\b');
+           index--;
+       continue;
+       }
+       acno[index++] = c;
+       putch('*');
+   }
+   acno[index] = '\0';
+   s1.acno=acno;
+            fprintf(fp,"%ld\t",s1.acno);
+
+
+            fprintf(fp,"%ld\t",s1.income);
+
+        printf("\n\t\tPin Code:\t");
+        scanf("%d",&s1.pincode);
+            fprintf(fp,"%d\n",s1.pincode);
+        fclose(fp);
+        printf("\n\t\tYour Credit Card is applied\t");
+        if(s1.income<900000)
+            {
+                    printf("\n\n\t\tYou are a GOLD USER and you are credited with Rs.10000 Credit Amoount");
+            }
+            else if(s1.income>900000&&s1.income<1800000)
+            {
+                    printf("\n\n\t\tYou are a PLATINUM USER and you are credited with Rs.50000 Credit Amount");
+
+            }
+            else if(s1.income>1800000)
+            {
+                    printf("\n\n\t\tYou are a DIAMOND USER and you are credited with Rs.100000 Credit Amount");
+
+            }
+            amount();
+
+        printf("\n\tPress 1 for login and 0 of exit\n");
+        scanf("%d",&m);
+    switch(m)
+    {   case 1:
+            login();
+            break;
+        case 0:
+            exit(0);
+            break;
+        default:
+        {
+            printf("\n\t\t Enter between 1 and 5");
+            main();
+            break;
+        }
+   }
+
+}
+}
+//User Main Page.
+void user()
+{
+    FILE *fp;
+     FILE *us;
+     FILE *msg;
+    int k,i,j,temp,id,bal,n,flag,inco;
+    char tme[20],v[10],p[10],q[10],z[10],s[10];
+    printf("\n\n\t\t\tWELCOME TO USER PAGE\t\t");
+    printf("\n\t\tEnter 1.My Details\n\t\t2.Cancel Credit Card\n\t\t3.Pay\n\t\t4.Transaction History\n\t\t5.Current Balance\n\t\t6.Exit");
+    scanf("%d",&k);
+    amount();
+    switch(k)
+    {
+    case 1:
+        {
+            //Display the details of the user.
+            fp=fopen("credit.dat","r");
+            us=fopen("username.dat","r");
+            int n,temper=0;
+            fscanf(us," %d",&n);
+            fclose(us);
+            while(fscanf(fp,"%d %s %s %ld %ld %d\n",&s2.userid,s2.password,s2.name,&s2.acno,&s2.income,&s2.pincode)!=EOF)
+            {
+                if(s2.userid==n)
+                {
+            printf("\n\t\tUser ID: %d",s2.userid);
+            printf("\n\t\tPassword: %s",s2.password);
+            printf("\n\t\tName: %s",s2.name);
+            printf("\n\t\tAccount no: %d",s2.acno);
+            printf("\n\t\tAnnual Income: %d",s2.income);
+            printf("\n\t\tPincode: %d\n",s2.pincode);
+                }
+            }
+            user();
+            fclose(fp);
+            break;
+            }
+
+    case 2:
+       {
+           //Apply for the cancellation of the credit card.
+           us=fopen("username.dat","r");
+           int i,n,temp=0;
+           char a[15],b[15],c[15],d[15],e[15],f[15];
+           fscanf(us,"%d",&i);
+           fclose(us);
+           msg=fopen("cancelrequest.dat","r");
+            while(fscanf(msg,"%d %s %s %s %s %s %s",&n,a,b,c,d,e,f)!=EOF)
+           {
+               if(n==i)
+               {
+                   printf("\n\t\tRequested Already");
+                   temp=1;
+               }
+           }
+           fclose(msg);
+           if(temp==0)
+           {
+                printf("\n\t\tRequesting for cancellation\n\t\t");
+           msg=fopen("cancelrequest.dat","a");
+           fprintf(msg,"%d has requested for Cancellation of card\t\n",i);
+           printf("\n\t\tCancellation request has sent to the admin\t\n");
+           fclose(msg);
+           }
+           user();
+           break;
+       }
+    case 3:
+        {
+            //Pay from the credit card Balance.
+            pay();
+            break;
+        }
+    case 4:
+        {
+            //Transaction History.
+            FILE *time;
+             us=fopen("username.dat","r");
+            fscanf(us,"%d",&n);
+            fclose(us);
+            time=fopen("thistory.dat","r");
+
+            while(fscanf(time,"%d%d%s%s%s%s%s\n",&id,&bal,tme,v,p,q,z)!=EOF)
+            {
+
+                if(id==n)
+                {
+                    printf("\n\t\tId:%d\t\tAmount Deducted: %d\t\tD&T: %s %s %s %s %s\n",id,bal,tme,v,p,q,z);
+                }
+            }
+            fclose(time);
+            user();
+            break;
+        }
+    case 5:
+        {
+            //Display the balance of the user.
+            FILE *us,*bal;
+            us=fopen("username.dat","r");
+            fscanf(us,"%s",s);
+            fclose(us);
+            bal=fopen(s,"r");
+            fscanf(bal,"%d%d\n",&flag,&inco);
+            fclose(bal);
+            printf("\n\t\tYour current balance is: %d\n",inco);
+            user();
+            break;
+        }
+    case 6:
+        {
+            //Exit.
+            exit(0);
+            break;
+        }
+        default:
+        {
+            printf("\n\t\tEnter between 1 and 5");
+            user();
+            break;
+        }
+    }
+}
+
+//User Login Page.
+void login()
+{   int un,count=0;
+char pw[20],c;
+int index=0;
+printf("\n\t\t\tWELCOME TO USER LOGIN\t");
+     printf("\n\t\tEnter UserID:\t");
+     scanf("%d",&un);
+     printf("\n\t\tEnter Password:\t");
+             while((c = getch()) != 13){
+       if(index < 0)
+           index = 0;
+
+       if(c == 8){
+           putch('\b');
+           putch(NULL);
+           putch('\b');
+           index--;
+       continue;
+       }
+       pw[index++] = c;
+       putch('*');
+   }
+   pw[index] = '\0';
+   // scanf("%s",pw);
+    FILE *fp;
+
+        fp=fopen("credit.dat","r");
+       while(fscanf(fp,"%d %s %s %d %d %d\n",&s1.userid,s1.password,s1.name,&s1.acno,&s1.income,&s1.pincode)!=EOF)
+        {
+        if(s1.userid==un)
+        {
+            if(strcmp(s1.password,pw)==0)
+            {
+                FILE *us;
+                us=fopen("username.dat","w");
+                fprintf(us,"%d\n",s1.userid);
+                fclose(us);
+            count=1;
+            break;
+        }}
+        }
+        if(count==1)
+        {
+                        printf("\n\t\t\tLOGIN SUCCESSFUL!\t\t");
+                        user();
+
+
+        }
+        if(count==0)
+        {
+            printf("\n\t\t\tINVALID USERNAME OR PASSWORD!\t");
+            login();
+        }
+
+}
+
+//Checking Passkey
+void akeysign()
+{
+ int index=0;
+ char c,kl[10],kc[10];
+ printf("\n\t\tEnter secret key to signup\t");
+ //scanf("%d",&kl);
+                while((c = getch()) != 13){
+       if(index < 0)
+           index = 0;
+
+       if(c == 8){
+           putch('\b');
+           putch(NULL);
+           putch('\b');
+           index--;
+       continue;
+       }
+       kl[index++] = c;
+       putch('*');
+   }
+   kl[index] = '\0';
+
+    FILE *ky;
+    ky=fopen("key.dat","r");
+       while(fscanf(ky,"%s\n",&kc)!=EOF);
+       {
+           if(strcmp(kl,kc)==0)
+           {
+               adminsignup();
+           }
+           else
+            {
+            printf("\n\t\tENTER CORRECT KEY!\t");
+            akeysign();
+           }
+       }
+       fclose(ky);
+
+}
+
